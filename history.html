@@ -1,8 +1,12 @@
+<!DOCTYPE html>
+<html>
+<title>Starblazer History</title>
+<body style="background-color:black;">
 <p>&nbsp;</p>
 <p><span style="text-decoration: underline; color: white;"><strong>History of Starblazer</strong></span></p>
 <p><img src="starblaz.gif" alt="" /></p>
 <p style="color: white;">The project that became Starblazer can trace its roots back to August 31, 2021. A few days prior was orientation for our high-school computer science class, where the teacher had introduced a semester-long project to create an application. Tasking us to think about it, on the second day of school, I sent a message to my co-programmer:</p>
-<p><img src="message.png" /></p>
+<p><img src="message.PNG" /></p>
 <p style="color: white;">Intended to be a clone of the 1983 Star Wars vector arcade game, it wasn't long until code began to be written for the game. The initial target was a 286-12 AT-class DOS machine with an 8-bit VGA card. My co-programmer was initially unenthusiastic, wanting to make an NES game instead, but I promised to do most of the code and only rely on him as a consultant, freeing up most of his time for his own side-projects.</p>
 <p style="color: white;">By September 9, we had enough code to show off a UI mockup of the game with a scrolling starfield - enough to evoke in the minds of many who saw the prototype, the Star Wars game on which our work was based.</p>
 <p><img src="starfield.gif" /></p>
@@ -30,3 +34,6 @@ Your browser does not support the video tag.</video></p>
 <p style="color: white;">The issue turned out to be with ANSI vs Unicode text. Windows NT supported both ANSI text, for backwards compatiblity, and 16-bit Unicode text, but Windows 95 supported only ANSI, so Open Watcom used the ANSI versions of all functions for maximum compatibility.</p>
 <p style="color: white;">A function like <strong>PlaySound</strong> is just an alias to <strong>PlaySoundA</strong> (the sound name is represented by an 8-bit ANSI char string) or <strong>PlaySoundW</strong> (16-bit unicode wide characters). In Open Watcom, it resolved to PlaySoundA, but resolved to PlaySoundW in VS2005. The solution was simple - use ANSI functions where available and convert to Unicode text where required.</p>
 <p style="color: white;">As for the title screen, the issue was with the palette not loading correctly, so I hardcoded that in.</p>
+
+</body>
+</html>
