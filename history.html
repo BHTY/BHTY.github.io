@@ -18,12 +18,12 @@
 <p style="color: white;">On November 19, the trench level began to take shape, with the walls being drawn and a single enemy moving around. I decided on using a linked list, though at the time, the sole enemy "bounced off" of the player to go backwards. Later that day, the health bar and laser bar (which would decrease with continuous fire and force you to cool down if you fired for sustained bursts) were added, and by November 20, there were multiple enemies, with the 3D Z-axis projection working properly.</p>
 <p style="color: white;">By November 21, there was working collision detection between your lasers and the enemy craft, and on the 23rd, I pulled together a test animation for what was later scrapped, and intended to be used for the end of the game.</p>
 <p><img src="anim1.gif" /></p>
-  <p style="color: white;">An early enemy design that didn't make the cut:</p>
+  <p style="color: white;">An early enemy design that didn't make the cut (look familiar?):</p>
   <p><img src="tie.png"></p>
 <p style="color: white;">For "Sprint 3", we had the official playable demo of the game, completed November 24. You'll notice the absence of a floor "texture", and no scrolling walls, healing items, or shields, but the core gameplay of exchanging fire with aliens and dodging their attacks is in place by this preliminary playable demo.</p>
 <p><video controls="controls" width="640" height="480">
   <source src="demo1.mp4" type="video/mp4" />
-Your browser does not support the video tag.</video></p>
+Requires Internet Explorer 5.0 or above.</video></p>
 <p style="color: white;">Feedback was generally positive, though many lamented the lack of scrolling walls. On November 25, scrolling walls were added.</p>
 <p style="color: white;">Due to waning motivation and various bugs, progress cratered on the game, with December seeing only the healing item as a major addition. In January, the credits and a temporary shield were added, completing the DOS version of Starblazer.</p>
 <p style="color: white;">Regrettably, the performance targets were not met for the game, and it sat for several months, until a boring summer day in August 2022. My main laptop was being serviced, so I set up an old Dell Latitude D620 (Core 2 Duo T7200) with Windows 7 32-bit, and installed an old copy of Open Watcom. After screwing around for a while, I had a working window with CreateDIBSection that I could write into a framebuffer for, so I decided to do a quick-and-dirty port of Starblazer to Windows using a conservative set of APIs that would work on Windows NT 3.5, Windows 95, or above.</p>
