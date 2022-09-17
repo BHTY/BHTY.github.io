@@ -18,6 +18,8 @@
 <p style="color: white;">On November 19, the trench level began to take shape, with the walls being drawn and a single enemy moving around. I decided on using a linked list, though at the time, the sole enemy "bounced off" of the player to go backwards. Later that day, the health bar and laser bar (which would decrease with continuous fire and force you to cool down if you fired for sustained bursts) were added, and by November 20, there were multiple enemies, with the 3D Z-axis projection working properly.</p>
 <p style="color: white;">By November 21, there was working collision detection between your lasers and the enemy craft, and on the 23rd, I pulled together a test animation for what was later scrapped, and intended to be used for the end of the game.</p>
 <p><img src="anim1.gif" /></p>
+  <p style="color: white;">An early enemy design that didn't make the cut:</p>
+  <p><img src="tie.png"></p>
 <p style="color: white;">For "Sprint 3", we had the official playable demo of the game, completed November 24. You'll notice the absence of a floor "texture", and no scrolling walls, healing items, or shields, but the core gameplay of exchanging fire with aliens and dodging their attacks is in place by this preliminary playable demo.</p>
 <p><video controls="controls" width="640" height="480">
   <source src="demo1.mp4" type="video/mp4" />
@@ -32,7 +34,7 @@ Your browser does not support the video tag.</video></p>
 <p style="color: white;">The next issue came with the fact that the title screen failed to load properly, the text was mojibake mixed with Japanese characters, and there was no sound.</p>
 <p style="color: white;">The issue turned out to be with ANSI vs Unicode text. Windows NT supported both ANSI text, for backwards compatiblity, and 16-bit Unicode text, but Windows 95 supported only ANSI, so Open Watcom used the ANSI versions of all functions for maximum compatibility.</p>
 <p style="color: white;">A function like <strong>PlaySound</strong> is just an alias to <strong>PlaySoundA</strong> (the sound name is represented by an 8-bit ANSI char string) or <strong>PlaySoundW</strong> (16-bit unicode wide characters). In Open Watcom, it resolved to PlaySoundA, but resolved to PlaySoundW in VS2005. The solution was simple - use ANSI functions where available and convert to Unicode text where required.</p>
-<p style="color: white;">As for the title screen, the issue was with the palette not loading correctly, so I hardcoded that in.</p>
+<p style="color: white;">As for the title screen, the issue was with the palette not loading correctly, so I hardcoded that in. This was resolved in later versions - the root cause was that the DOS version ran in 8bpp while the Windows version ran in 16bpp, so a palette lookup was done, converting a char array into a short array. Difficult part was, Open Watcom considered chars to be unsigned by default (a logical behavior), while modern VS considers them signed - normally not an issue, but is an issue when used for array lookup. For example, in palette lookup.</p>
 
 </body>
 </html>
