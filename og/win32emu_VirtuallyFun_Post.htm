@@ -577,8 +577,8 @@ CaptainWillStarblazer</h1>
 
 <p class=normal>The idea for win32emu began shortly after the leak of an
 unreleased AXP64 version of Windows. This generated a great degree of
-excitement on the VirtuallyFun Discord server (and fundamentally a “porting
-party” where neozeed hosted his PWS over RDP for people to port applications,
+excitement on the VirtuallyFun Discord server (and fundamentally a Â“porting
+partyÂ” where neozeed hosted his PWS over RDP for people to port applications,
 which I did). We had an SDK for the build with a compiler, but you needed an
 actual DEC Alpha machine running 32-bit Windows to run the SDK tools and then
 reboot it into 64-bit Windows to run any of your applications - there was no
@@ -607,7 +607,7 @@ directly to host functions).</p>
 normal'><o:p></o:p></span></h1>
 
 <p class=normal>My first serious attempt at this project began in August 2023.
-Since the i386 processor was a “known quantity” (there was the most
+Since the i386 processor was a Â“known quantityÂ” (there was the most
 documentation on it compared to the RISC CPUs, and I was comfortable with it
 and its calling convention under Windows NT), I first wrote an i386 emulator
 core (while technically redundant on an x86/x64 machine, it still showcased the
@@ -621,20 +621,22 @@ core runtime functions. Inside each function (i.e. HeapAlloc), the EAX register
 was set to the syscall ID (a number I had chosen to represent HeapAlloc) and
 then INT 0x80 was executed - the syscall interrupt. The implementation for the
 interrupt instruction in the CPU emulator would check if the interrupt number
-was 0x80, and if it is, it uses the EAX register as the index into a “thunk
-table” (an array of function pointers with names like thunk_HeapAlloc). The
+was 0x80, and if it is, it uses the EAX register as the index into a Â“thunk
+tableÂ” (an array of function pointers with names like thunk_HeapAlloc). The
 function in the thunk table is executed, which usually pulls the parameters off
-of the emulated CPU’s stack, passes them to the Windows function it’s thunking
+of the emulated CPUÂ’s stack, passes them to the Windows function itÂ’s thunking
 to, and returns the result. When the handle_syscall function returns, it sets
 its return value into the EAX register so the emulated process can see it.</p>
 
+<img src="win32emu_VirtuallyFun_Post_files/ok.png">
+	
 <p class=normal><o:p>&nbsp;</o:p></p>
 
 <p class=normal>The emulated 386 ran in its own sandboxed virtual memory space,
 and I emulated the page topology of the processor, mapping pages into its
 virtual memory, to access RAM. This was slow - a massive speed penalty, and
 prevented me from fully relying on the Windows memory management functions, or
-even accessing resources directly from an HMODULE (since there’s a level of
+even accessing resources directly from an HMODULE (since thereÂ’s a level of
 abstraction behind the pointer that that HMODULE represents).</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
@@ -661,10 +663,10 @@ instructions, fixing bugs, and adding unimplemented imports. </p>
 SDK for Chicago build 73f), but absent any icons, text, or menus, due to the
 aforementioned issues with resources. After some more work writing my own
 functions to parse the resource directory, I got it all to work, including the
-“About” dialog box resource, but with one seemingly unsolvable issue: the
-dialog box’s icons were missing. Since the DialogBox function that I was
+Â“AboutÂ” dialog box resource, but with one seemingly unsolvable issue: the
+dialog boxÂ’s icons were missing. Since the DialogBox function that I was
 thunking to takes in an HINSTANCE and uses that to resolve all of the icons
-referenced in the dialog box template, I couldn’t make it work. Short of
+referenced in the dialog box template, I couldnÂ’t make it work. Short of
 enumerating every icon in the dialog box and parsing the dialog template for
 the appropriate icon and then loading it manually, there was no real solution,
 and even that would be a kludge.</p>
@@ -698,18 +700,18 @@ and even that would be a kludge.</p>
 src="win32emu_VirtuallyFun_Post_files/image002.jpg" v:shapes="Picture_x0020_6"><![endif]></span></p>
 
 <p class=normal>An early version of win32emu running a hacked version of
-Reversi – note the lack of icon, menu, or title bar. Many nights stretched into
+Reversi Â– note the lack of icon, menu, or title bar. Many nights stretched into
 the early mornings (read: 5-7AM) to make this possible. I had only been working
-on the project for a few days by this point, and a few days later, I’d have
+on the project for a few days by this point, and a few days later, IÂ’d have
 gotten icons, menus, title bars, and dialog boxes working.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
 <p class=normal>Indirecting memory access through a function (and two tables)
 was also extremely slow, as I said earlier. On a 3GHz Ryzen 9 4900HS laptop
-compiled with maximum optimizations, I got about 1 MIPS. I know that my code isn’t
-the most efficiently optimized in the world, but I didn’t think it could be <i
-style='mso-bidi-font-style:normal'>that</i> slow. That’s just not very usable,
+compiled with maximum optimizations, I got about 1 MIPS. I know that my code isnÂ’t
+the most efficiently optimized in the world, but I didnÂ’t think it could be <i
+style='mso-bidi-font-style:normal'>that</i> slow. ThatÂ’s just not very usable,
 since even the most basic 386 running Windows NT 3.1 was faster.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
@@ -719,19 +721,19 @@ since even the most basic 386 running Windows NT 3.1 was faster.</p>
 <p class=normal>I let the project sit for a few months: a neat, but flawed proof-of-concept
 for something better executed by a better programmer. When November came, I had
 renewed plans for how I would do this, with the general idea being to make this
-cleaner and less “hacky”.</p>
+cleaner and less Â“hackyÂ”.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
 <p class=normal>The main change would be in the memory management - the
-emulated CPU would access the host’s memory directly, with modules mapped
-directly into the host’s virtual memory address space. This had obvious speed
+emulated CPU would access the hostÂ’s memory directly, with modules mapped
+directly into the hostÂ’s virtual memory address space. This had obvious speed
 advantages, but it also allowed me to use Windows functions (i.e. LoadString)
-to extract resources from an HMODULE, since the HMODULE’s I load are “the same”
+to extract resources from an HMODULE, since the HMODULEÂ’s I load are Â“the sameÂ”
 as the Windows ones, and it lets me pass pointers that Windows allocates
 directly to the emulator. The caveat with this implementation is that it
 requires the address space of the emulator application to be the same as that
-of the CPU it’s emulating. Since every host virtual memory address has to be
+of the CPU itÂ’s emulating. Since every host virtual memory address has to be
 valid on the emulated CPU with no translation, this is a requirement. I
 compiled the emulator as a 32-bit application, but theoretically it could work on
 x64 with the /LARGEADDRESSAWARE:NO switch passed to the linker.</p>
@@ -745,9 +747,9 @@ truncate the pointers. This means that despite the Alpha having 64-bit
 registers and 64-bit operations, its emulator would also need to run in a
 32-bit address space, but this is where the /LARGEADDRESSAWARE:NO switch can
 come in handy. Being a native x64 application had speed benefits for the 64-bit
-operations that the Alpha’s CPU performs, so you get the best of both worlds.
+operations that the AlphaÂ’s CPU performs, so you get the best of both worlds.
 Obviously, a hypothetical AXP64 implementation would reuse most of the emulator
-code, but run in a 64-bit address space. As of now, the application isn’t
+code, but run in a 64-bit address space. As of now, the application isnÂ’t
 64-bit clean, but that work could definitely be done in the future.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
@@ -759,7 +761,7 @@ thunking layer communicate with the emulated CPU, such as getting and setting
 the return value, syscall ID, function arguments, program counter, stack
 pointer, etc. Crucially, this let me abstract away the calling convention as
 well - the differences between how MIPS and x86 Windows NT applications work
-isn’t just the instruction set, the calling convention is also different. In
+isnÂ’t just the instruction set, the calling convention is also different. In
 __stdcall on the x86, the return value is in EAX, parameters are pushed onto
 the stack right-to-left, the return address is pushed onto the stack, and the
 callee cleans up the stack by popping off the arguments.</p>
@@ -797,7 +799,7 @@ allocating it, zeroing out the registers, and then allocating a TEB and setting
 it into the CPU. Using VirtualAlloc, the stack is allocated (both reserved and
 committed regions), and pointers to the top of the stack and the address of the
 lowest committed page are put into the TEB, as is a pointer to the TEB itself
-and the PEB. The CPU’s stack pointer is then set to the stack top, and the
+and the PEB. The CPUÂ’s stack pointer is then set to the stack top, and the
 instruction pointer is set to the passed-in start address, with the CPU now
 being ready for execution.</p>
 
@@ -807,7 +809,7 @@ being ready for execution.</p>
 tweaks), I quickly started executing, having to reimplement thunks along the
 way. It wasn't long until I had a basic Hello World program using MessageBox
 working, and soon I was also at the point of creating a window in Reversi.
-However, the game didn’t do anything, since I hadn’t implemented callbacks yet,
+However, the game didnÂ’t do anything, since I hadnÂ’t implemented callbacks yet,
 which tied into an issue I had (and kludged my way around) in the old
 implementation.</p>
 
@@ -815,7 +817,7 @@ implementation.</p>
 
 <p class=normal>Before creating a window, one first registers a window class.
 Among other things, it has a class name (used to identify it) and a WndProc
-address. Obviously, the emulated window procedure can’t run directly on the
+address. Obviously, the emulated window procedure canÂ’t run directly on the
 host, so I substitute in a thunk_WndProc which Windows actually calls, and then
 save the classname and WndProc into an internal map.</p>
 
@@ -824,7 +826,7 @@ save the classname and WndProc into an internal map.</p>
 <p class=normal>When one does get around to creating a window, they pass in the
 classname. The question, of course, is how the WndProc thunk knows which
 emulated WndProc to call. I quickly settled on an HWND-to-WndProc lookup table,
-but I don’t have the HWND until CreateWindow returns, and the WndProc is called
+but I donÂ’t have the HWND until CreateWindow returns, and the WndProc is called
 with a WM_CREATE message before then. The solution then was still to do an
 HWND-to-WndProc lookup. If a WndProc is found, thunk to that and return the
 result. If not, the window is still being created, so get the classname from
@@ -858,7 +860,7 @@ the escape vector. What the escape vector does is basically do an interrupt
 which decrements the callback depth. After performing the interrupt, the loop
 in ThunkCallback is escaped from and the old IP is set back, and then the thunk
 WndProc returns. After the thunk that called the window procedure (such as
-DispatchMessage) returns, you’re soon back in emulated code. After the return
+DispatchMessage) returns, youÂ’re soon back in emulated code. After the return
 instruction is executed, returning the CPU back to the return instruction in
 the DLL function following the syscall interrupt. That return instruction is
 then executed and the CPU is back into user code, with the return value
@@ -870,8 +872,8 @@ cascading out across thunking layers.</p>
 window procedure, since the WndProc thunk has a normal WndProc function
 signature with no space to pass a CPU pointer. In the past, this was a global
 variable, but I wanted to support multiple threads (which would each have their
-own CPU structure, and I’d let the Windows scheduler manage the rest), so that
-wasn't an option. I couldn’t think of a good solution, so I settled on adding
+own CPU structure, and IÂ’d let the Windows scheduler manage the rest), so that
+wasn't an option. I couldnÂ’t think of a good solution, so I settled on adding
 an extra field to the HWND-to-WndProc table which contained a CPU pointer, and
 inside of the thunk for any Windows function which calls the window procedure,
 I then call LockWindow, passing in the HWND and CPU pointer (which the call
@@ -883,10 +885,10 @@ calling DispatchMessage.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
-<p class=normal>Reversi is nice because it’s essentially the simplest complete,
+<p class=normal>Reversi is nice because itÂ’s essentially the simplest complete,
 interactive windows app you can have. As such, it made a good test case.
 Getting to the point of creating the window was just a matter of implementing
-the necessary imports, but after that, it hung since I hadn’t implemented
+the necessary imports, but after that, it hung since I hadnÂ’t implemented
 callbacks yet. After I did, it was just a matter of adding a few more imports
 and Reversi was working perfectly. The CPU emulation was also significantly
 faster than before - perfectly usable.</p>
@@ -895,10 +897,10 @@ faster than before - perfectly usable.</p>
 
 <p class=normal>After getting Reversi working essentially perfectly, my next
 goal was to get FreeCell working. FreeCell was the Win32 test app and bundled
-with Windows 95 and Win32s and up. It depended on SHELL32.DLL, which I hadn’t
+with Windows 95 and Win32s and up. It depended on SHELL32.DLL, which I hadnÂ’t
 yet implemented, so I needed to add a few more thunks, but it wasn't too hard.
 However, there was an inexplicable error - it was crashing somewhere, and I
-couldn’t figure out why. Absent debug symbols for this version of FreeCell, my
+couldnÂ’t figure out why. Absent debug symbols for this version of FreeCell, my
 ability to debug was somewhat limited, so I moved on. A few other apps I had
 wanted to get working included the Windows NT 3.10 clock applet, the Visual C++
 command-line SDK tools (i.e. CL, NMAKE, LINK, etc.) and WinMine.</p>
@@ -908,7 +910,7 @@ command-line SDK tools (i.e. CL, NMAKE, LINK, etc.) and WinMine.</p>
 <p class=normal>A few apps immediately ran into problems due to lack of
 floating-point support - Calc, Aclock, DoomGeneric, and GDIDEMO instantly ran
 into issues, and short of adding floating point (which I plan to do but which
-is a significant undertaking for now), that’s not exactly a solvable problem.</p>
+is a significant undertaking for now), thatÂ’s not exactly a solvable problem.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
@@ -928,21 +930,21 @@ thunk DLL for every single system DLL just wasn't realistic.</p>
 
 <p class=normal>One may wonder, then, how exactly the WoW64 subsystem works;
 obviously, if Microsoft is doing it one way that seems to work pretty well, I
-should too. Unfortunately, it’s not so simple. On 64-bit Windows, 32-bit
-applications run in 32-bit protected mode (or an emulator thereof) as they’d
-expect and there’s a full complement of 32-bit DLLs. Most of these DLLs don’t
+should too. Unfortunately, itÂ’s not so simple. On 64-bit Windows, 32-bit
+applications run in 32-bit protected mode (or an emulator thereof) as theyÂ’d
+expect and thereÂ’s a full complement of 32-bit DLLs. Most of these DLLs donÂ’t
 do any funny business - they just call down to lower-level DLLs like GDI32,
 USER32, KERNEL32, or NTDLL, so their WoW versions can be the same as their
 IA-32 versions, but some DLLs need to call down to the kernel.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
-<p class=normal>NTDLL.DLL exports the “NT native API” - mostly just user-mode
+<p class=normal>NTDLL.DLL exports the Â“NT native APIÂ” - mostly just user-mode
 exports for functions from NTOSKRNL to do things like manage memory, processes,
-and threads. Most images don’t use it directly, but they do depend on KERNEL32
+and threads. Most images donÂ’t use it directly, but they do depend on KERNEL32
 which is essentially a wrapper over NTDLL (and many functions in KERNEL32
-forward to NTDLL). Inside of each function is what’s called a “system call
-stub”. Essentially, it loads registers with a pointer to the function
+forward to NTDLL). Inside of each function is whatÂ’s called a Â“system call
+stubÂ”. Essentially, it loads registers with a pointer to the function
 parameters and the syscall ID of the relevant function, and then does an
 interrupt (or SYSCALL instruction).</p>
 
@@ -964,7 +966,7 @@ and USER functions directly syscall to win32k.sys.</p>
 
 <p class=normal>Essentially, WoW only needs thunks for kernel calls, avoiding
 costly transitions into long mode or switches out of an emulation layer.
-Unfortunately, this solution isn’t very workable for me. WoW has the benefit of
+Unfortunately, this solution isnÂ’t very workable for me. WoW has the benefit of
 operating with known versions of both the 32-bit DLLs and the 64-bit DLLs that
 they thunk to, since a given version of WoW is tied to a given version of
 Windows, and the syscall stubs are undocumented and change between versions.</p>
@@ -972,9 +974,9 @@ Windows, and the syscall stubs are undocumented and change between versions.</p>
 <p class=normal><o:p>&nbsp;</o:p></p>
 
 <p class=normal>Theoretically, I could make a guarantee to operate with a known
-version of the 32-bit DLL (and that’s effectively what I do by making my own),
+version of the 32-bit DLL (and thatÂ’s effectively what I do by making my own),
 so I at least know what an emulated syscall ID means, but I could be running on
-any arbitrary version of Windows on the hostside, so “resolving” the system
+any arbitrary version of Windows on the hostside, so Â“resolvingÂ” the system
 call would still be troublesome.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
@@ -997,14 +999,14 @@ changed to go to a callback thunk procedure, as discussed earlier.</p>
 
 <h1><a name="_oqh6gyvesznd"></a><o:p>&nbsp;</o:p></h1>
 
-<h1><a name="_vwrspitl0pf6"></a>Getting Reversi Working… Again!</h1>
+<h1><a name="_vwrspitl0pf6"></a>Getting Reversi WorkingÂ… Again!</h1>
 
 <p class=normal>Once I had Reversi functioning again, I was once again at the
 point of trying to get more sophisticated applications working. First of all, I
 knew SHELL32 would be a dependency of most future applications, so I first
 modified Reversi to use ShellAboutA to display the About dialog box instead of
-creating its own. I loaded Windows NT 3.51’s SHELL32.DLL, which depends on
-calls from already-implemented DLLs… but the dialog box failed to appear. (I
+creating its own. I loaded Windows NT 3.51Â’s SHELL32.DLL, which depends on
+calls from already-implemented DLLsÂ… but the dialog box failed to appear. (I
 had to add shims for ADVAPI32.DLL to let SHELL32 access the registry, which it
 needs.)</p>
 
@@ -1012,7 +1014,7 @@ needs.)</p>
 
 <p class=normal>The problem is that SHELL32!ShellAboutW passes in its own
 HINSTANCE to DialogBoxParamW, but that HINSTANCE is a variable in the data
-section that’s filled in during DLLMainCRTStartup… which I didn’t execute yet.</p>
+section thatÂ’s filled in during DLLMainCRTStartupÂ… which I didnÂ’t execute yet.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
@@ -1038,7 +1040,7 @@ code in its entry point.</p>
 <p class=normal>After a bit more debugging work, I finally had a version of
 Reversi that displayed the Windows NT 3.51 About dialog. After that, getting
 FreeCell running was just a matter of a few more added functions, added
-instructions, and it was working… but not without its glitches. </p>
+instructions, and it was workingÂ… but not without its glitches. </p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
@@ -1063,13 +1065,15 @@ as well, but also not without its issues.</p>
 </v:shape><![endif]--><![if !vml]><img width=623 height=338
 src="win32emu_VirtuallyFun_Post_files/image006.jpg" v:shapes="Picture_x0020_4"><![endif]></span></p>
 
+<img src="win32emu_VirtuallyFun_Post_files/menu.png">
+
 <p class=normal><o:p>&nbsp;</o:p></p>
 
-<p class=normal>I’m working on getting some more Windows NT applets working,
+<p class=normal>IÂ’m working on getting some more Windows NT applets working,
 such as Clock, Notepad, and Paintbrush (Paint in Windows 95 could possibly be
-made to work in the future, but due to dependencies on MFC, I don’t want to
+made to work in the future, but due to dependencies on MFC, I donÂ’t want to
 mess with it), but something in the COMDLG32 entry point is causing issues, so
-it’s not working quite yet (though I was surprised to see a LOCK CMPXCHG
+itÂ’s not working quite yet (though I was surprised to see a LOCK CMPXCHG
 instruction, which wasn't added until the 486, despite NT 3.51 apparently
 supporting the 386 - it must be emulated through an exception handler?). As it
 stands, this is still little more than a proof of concept, but progress is
@@ -1082,35 +1086,35 @@ normal'><span style='font-weight:normal'><o:p></o:p></span></i></h1>
 
 <p class=normal><i style='mso-bidi-font-style:normal'>Side Note: This section
 is written under the assumption I would have already done all this work before
-the blog post, but I’ve been busy and still need to get on this!<o:p></o:p></i></p>
+the blog post, but IÂ’ve been busy and still need to get on this!<o:p></o:p></i></p>
 
 <p class=normal><i style='mso-bidi-font-style:normal'><o:p>&nbsp;</o:p></i></p>
 
 <p class=normal>I had taken some other miscellaneous shortcuts during
-development that I also wanted to address. First of all, the CPU had a few…
+development that I also wanted to address. First of all, the CPU had a fewÂ…
 clunky issues. First of all, I had stubbed out the FS segment override prefix,
-so the TEB couldn’t actually be addressed. Adding an address override field
+so the TEB couldnÂ’t actually be addressed. Adding an address override field
 (that the TEB is dumped into) that is added to Mod R/M memory addresses quickly
 resolved this.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
-<p class=normal>There was also no debugger. I’m no expert, and I certainly
-don’t have the knowledge to do full source-level or even symbolic debugging,
+<p class=normal>There was also no debugger. IÂ’m no expert, and I certainly
+donÂ’t have the knowledge to do full source-level or even symbolic debugging,
 but I figured I could at least lift some code from sim386 to add a basic
 debugger with support for breakpoints, single stepping, and memory and register
-dumps. The idea was that two things should manipulate the CPU’s execution
+dumps. The idea was that two things should manipulate the CPUÂ’s execution
 state: fatal errors (i.e. unimplemented instructions) and breakpoints (which
-are treated as fatal errors when the debugger isn’t active). When there’s a
+are treated as fatal errors when the debugger isnÂ’t active). When thereÂ’s a
 fatal error, that causes the CPU to return 1 (so execution quits) while if
-there’s a breakpoint, it breaks out into the debugger.</p>
+thereÂ’s a breakpoint, it breaks out into the debugger.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
-<p class=normal>I essentially wrapped the CPU’s step function into a debugger
+<p class=normal>I essentially wrapped the CPUÂ’s step function into a debugger
 step function (that would step the CPU as normal unless it was halted for
 debugging purposes). One nice thing is that while the debugger does control the
-CPU’s execution, it isn’t directly involved with how that execution works, so
+CPUÂ’s execution, it isnÂ’t directly involved with how that execution works, so
 the code can be common between x86, MIPS, and anything else. The debugger is
 pretty barebones and simple; you can list, set, and remove breakpoints, dump
 memory, enter values into memory, dump and set registers, go until a
@@ -1120,7 +1124,7 @@ breakpoint, single step, or quit.</p>
 
 <p class=normal>There was also a sore lack of error handling - everything would
 just assume that everything else had worked - if not, a crash was fine since
-I’d just fix it. This permeated everything, especially the PE-related
+IÂ’d just fix it. This permeated everything, especially the PE-related
 functions. EmuLoadLibrary also needed to be fixed to actually populate the tree
 in the PEB that contains a list of all loaded modules so GetModuleHandle can
 work, and EmuLoadLibrary should prevent DLLs from being loaded multiple times.</p>
@@ -1132,7 +1136,7 @@ normal'><o:p></o:p></span></h1>
 
 <p class=normal>Once I had x86 working, extending the emulator to add support
 for the MIPS ISA wasn't too difficult. MIPS EXEs did load, but of course the
-x86 emulator won’t be able to run the code. To go on, I obviously first needed
+x86 emulator wonÂ’t be able to run the code. To go on, I obviously first needed
 a set of MIPS system DLLs (not difficult to source) and new thunk DLLs (which I
 can generate with a new version of thunk compiler).</p>
 
@@ -1151,7 +1155,7 @@ instruction.</p>
 
 <p class=normal>With the thunk DLLs in hand, I was then solely confronted with
 the problem of actually emulating MIPS. Having abstracted away the details of
-the CPU and its calling convention, I didn’t need to modify the thunk layer,
+the CPU and its calling convention, I didnÂ’t need to modify the thunk layer,
 only implement the same functions for MIPS.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
@@ -1161,8 +1165,8 @@ an emulator was extremely simple - simpler than x86. I have previously written
 a RISC-V emulator for a school project, and the similarities between the ISAs
 mean that this wasn't a difficult task. The other nice thing about MIPS is that
 while the development experience for it is certainly not nearly as nice as x86
-(since I can’t natively compile or execute or debug MIPS executables on my
-machine), it does have the benefit of being emulated, so it’s still easier than
+(since I canÂ’t natively compile or execute or debug MIPS executables on my
+machine), it does have the benefit of being emulated, so itÂ’s still easier than
 Alpha or PowerPC. The bedrock of this work will definitely pay off for the
 other RISC architectures. Right now, I have the start of the MIPS emulator and
 a MIPS backend for the thunk compiler.</p>
@@ -1170,8 +1174,8 @@ a MIPS backend for the thunk compiler.</p>
 <p class=normal><o:p>&nbsp;</o:p></p>
 
 <p class=normal>Writing an emulator for most of the base MIPS 32-bit user mode
-integer ISA didn’t take long, but I quickly ran into issues when I tried to
-execute code - it was crashing inside of SHELL32’s entry point. I realized I
+integer ISA didnÂ’t take long, but I quickly ran into issues when I tried to
+execute code - it was crashing inside of SHELL32Â’s entry point. I realized I
 was bumping up against a nasty implementation detail of the MIPS architecture.
 Due to the design of the pipeline, the instruction immediately following a
 branch is always executed, regardless of whether the branch is taken. To get
@@ -1182,22 +1186,22 @@ instruction to be put into the delay slot from memory. I print out the current
 instruction in the delay slot and the current instruction in the instruction
 register, and you can see the instruction in the delay slot cascading down to
 the IR on the next cycle. For branches that are expected to be taken, there are
-“branch likely” instructions, that nullifies (i.e. NOPs out) the delay slot if
-the branch isn’t taken. This behavior is puzzling to me, since I’d expect it to
+Â“branch likelyÂ” instructions, that nullifies (i.e. NOPs out) the delay slot if
+the branch isnÂ’t taken. This behavior is puzzling to me, since IÂ’d expect it to
 nullify the delay slot if the branch <i style='mso-bidi-font-style:normal'>is</i>
 taken, since that would more closely mimic the linear execution model of other
 processors where the branch is taken immediately, with no delay. </p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
-<p class=normal>At this point, the emulator got through SHELL32’s DLL entry
-point, but crashed shortly after creating the heap in Reversi’s CRT
-initialization. Moreover, if the image didn’t get its desired base address, it
+<p class=normal>At this point, the emulator got through SHELL32Â’s DLL entry
+point, but crashed shortly after creating the heap in ReversiÂ’s CRT
+initialization. Moreover, if the image didnÂ’t get its desired base address, it
 crashed even earlier. I had implemented support for PE relocations, but not in
 a way that worked for MIPS. On x86, 32-bit addresses are given as 4-byte
 immediate quantities, so the 32-bit quantity at a given address can be added
 with the delta to perform the fixup. This is the HIGHLOW relocation type, and
-it’s the only one commonly seen in x86 applications, but rarely seen in MIPS,
+itÂ’s the only one commonly seen in x86 applications, but rarely seen in MIPS,
 except maybe to fix up jump tables.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
@@ -1217,12 +1221,12 @@ rebasing should come in handy for the other RISC architectures.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
-<p class=normal>Not all EXEs have relocations, since they’re expected to be
+<p class=normal>Not all EXEs have relocations, since theyÂ’re expected to be
 loaded first into the address space and always get their desired image base, so
-it’s pretty important to make sure they can get their desired base. This isn’t
-an entirely solved problem, since I don’t have full control over the virtual
+itÂ’s pretty important to make sure they can get their desired base. This isnÂ’t
+an entirely solved problem, since I donÂ’t have full control over the virtual
 memory layout after Windows loads the emulator, but I can strategically choose
-the emulator’s image base to make conflicts unlikely.</p>
+the emulatorÂ’s image base to make conflicts unlikely.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
@@ -1247,7 +1251,7 @@ v:shapes="Picture_x0020_1"><![endif]></span></p>
 
 <p class=normal>In fact, all of my emulation problems throughout development
 had come from MIPS delay slots. My implementation was awkward, but it does
-“work”.</p>
+Â“workÂ”.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
@@ -1255,25 +1259,25 @@ had come from MIPS delay slots. My implementation was awkward, but it does
 x86 platform through what is essentially a homebrewed version of WoW was
 immeasurable - this was the ultimate proof of my concept (well, technically,
 the <i style='mso-bidi-font-style:normal'>ultimate</i> proof would be CL, or
-perhaps Doom running, but this’ll do for now). Obviously, my work is far from
-over, but the source code repo includes the current MIPS support code. There’s
+perhaps Doom running, but thisÂ’ll do for now). Obviously, my work is far from
+over, but the source code repo includes the current MIPS support code. ThereÂ’s
 still some rebasing issues, though.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
 <h1><a name="_dip4hwdkmko0"></a>The Future<span style='font-weight:normal'><o:p></o:p></span></h1>
 
-<p class=normal>I’d encourage someone to write a CPU module for the DEC Alpha
-AXP (or even PowerPC if anyone for some reason wants that). The API isn’t too
+<p class=normal>IÂ’d encourage someone to write a CPU module for the DEC Alpha
+AXP (or even PowerPC if anyone for some reason wants that). The API isnÂ’t too
 complicated, and the i386 emulator is available for reference to see how the
 CPU emulator interfaces with the Win32 thunking side. An Alpha backend for the
 thunk compiler can definitely be written without too much trouble. Obviously,
 the AXP presents the challenge that fewer people are familiar with its
 instruction set than MIPS or 386, but this approach does free one from having
 to emulate all of the intricate hardware connections in actual Alpha
-applications while still running applications designed for it, and I’ve heard
-the Alpha is actually quite nice and clean. MAME’s Digital Alpha core could be
-a good place to start, but it’ll need some adaptation to work in this codebase.
+applications while still running applications designed for it, and IÂ’ve heard
+the Alpha is actually quite nice and clean. MAMEÂ’s Digital Alpha core could be
+a good place to start, but itÂ’ll need some adaptation to work in this codebase.
 Remember that while being a 64-bit CPU with 64-bit registers and operations,
 the Alpha still runs Windows with 32-bit pointers, so it should run in a 32-bit
 address space (i.e. pass /LARGEADDRESSAWARE:NO to the linker).</p>
@@ -1281,23 +1285,23 @@ address space (i.e. pass /LARGEADDRESSAWARE:NO to the linker).</p>
 <p class=normal><o:p>&nbsp;</o:p></p>
 
 <p class=normal>Theoretically, recompiling the application to support the full
-address space should enable emulation of AXP64 applications, since the Alpha’s
-64-bit pointers will allow it to address the host’s 64-bit address space, but
-I’m not sure if my emulator is totally 64-bit clean, or if the AXP64’s calling
+address space should enable emulation of AXP64 applications, since the AlphaÂ’s
+64-bit pointers will allow it to address the hostÂ’s 64-bit address space, but
+IÂ’m not sure if my emulator is totally 64-bit clean, or if the AXP64Â’s calling
 convention is materially different from that on the AXP32 in such a way that
 would require substantial changes. In either case, most of the code should
 still be transferable.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
-<p class=normal>I also want to get more “useful” applications running, like
+<p class=normal>I also want to get more Â“usefulÂ” applications running, like
 development tools (i.e. the MSVC command line utilities - CL, MAKE, LINK, etc.)
 and CMD. Most of that probably involves implementing more thunks and
 potentially fixing CPU bugs.</p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
 
-<p class=normal>This project is obviously still in a quite early stage, but I’m
+<p class=normal>This project is obviously still in a quite early stage, but IÂ’m
 hoping to see it grow and become something useful for those in the hobby. </p>
 
 <p class=normal><o:p>&nbsp;</o:p></p>
