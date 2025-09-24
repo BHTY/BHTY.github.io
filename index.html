@@ -1,17 +1,83 @@
-<!DOCTYPE html>
-<html>
-<title>Starblazer on the Web Home Page</title>
-<body style="background-color:black;">
+<title>Will Klees Home Page</title>
 
-<p><span style="text-decoration: underline;color:white;"><strong>Starblazer On-Line Internet Web Site</strong></span></p>
-<p><img src="starblaz.gif" alt="" /></p>
-<p style="color:white;">Welcome to the Starblazer Internet Presence! Stay here for the latest news on Starblazer: 2000 A.D. (Take a Trip You'll Never Forget Into the Space Age of the 21st Century!), <a href="star2.html">Starblazer II</a>, and more.</p>
-<p><a href="history.html">Click here for the history of Starblazer: 2000 A.D.!</a><br>
-<a href="starblazer_bin.zip">Click here to download Starblazer: 2000 A.D. for Windows 95/NT (i386) / Windows NT (MIPS) / Windows XP+ (AMD64)</a><br>
-<a href="starblazer_src.zip">Click here to download Starblazer: 2000 A.D. for Windows source code</a><br>
- <a href="mailto:phasershow@gmail.com">Email the Webmaster</a></p>
-<img src="shot1.png">
-<img src="shot2.png">
-</body>
-</html>
+<p>I am Will Klees, also commonly known under my screen-name&nbsp;<em>captainwillstarblazer</em>, and welcome to my home page. I'm primarily interested in developing software for retro platforms, including old-school PCs and occasionally game consoles such as the Nintendo GBA. In conjunction with this, I'm fascinated by the history of personal computers, particularly in the 80s and 90s, so I often do lots of reverse-engineering projects and other assorted historical endeavours.</p>
+<p>I have been featured multiple times as a guest writer for Neozeed's <a href="https://virtuallyfun.com">VirtuallyFun</a> blog, and am also an avid reader of Michal Necasek's <a href="https://os2museum.com">OS/2 Museum</a> blog, and Raymond Chen's <a href="https://devblogs.microsoft.com/oldnewthing/">The Old New Thing</a>.&nbsp;</p>
+<p>If you're interested in hiring my services, whether as a consultant or employee, you're invited to take a look at my resume. My skills range far and wide, but the services I'm most likely to be able to provide include&nbsp;</p>
+<ol>
+<li>Writing software</li>
+<li>Maintaining / cleaning up software (even where the original author is no longer available)</li>
+<li>Analyzing compiled software where source code is unavailable</li>
+</ol>
+<p>To contact me, please email me at&nbsp;<strong>william (dot) p (dot) klees (at) gmail (dot) com</strong>. I'd be very interested to hear what everyone has to say.</p>
+<p>&nbsp;</p>
+<p><a href="resume.pdf"><strong>Resume (PDF)</strong></a></p>
+<p><a href="news/index.html"><strong>News</strong></a><br />Updates on work that I'm doing here!</p>
+<p><a href="bsg/bsg.html"><strong>Battlestar Galactica Video Game</strong></a><br />A simple on-rails 3D space shooter based on the&nbsp;<em>Battlestar Galactica</em> (1978) television series, done in the style of old vector arcade games such as Atari's&nbsp;<em>Star Wars</em> (1983). Written entirely in JavaScript/HTML using the Canvas by myself and Andrew Wagger in January 2023.</p>
 
+<p><a href="starblzr/index.html"><strong>Starblazer</strong></a><br />
+Take a trip you'll never forget into the space age of the 21st century with Starblazer, a series of 3D space combat simulation games I've been developing, primarily for MS-DOS computers. I have an <a href="oldsite/index.html">old Starblazer website</a> too, but it's pretty out of date.
+</p>
+
+<p><strong><a href="https://github.com/bhty">GitHub Account</a></strong></p>
+<p>&nbsp;</p>
+
+<h1><strong>Retro Reversing</strong></h1>
+
+<p><a href="https://github.com/bhtY/emuwow"><strong>EmuWOW</strong></a><br />
+An emulator I wrote as a senior in high school to enable applications compiled for Windows NT running on the MIPS and Alpha AXP (and even i386) processor architectures to run on other processors. Originally intended to enable the elusive AXP64-targeting compiler (rediscovered, alongside an early AXP64 build of Windows, in May 2023, when EmuWOW was originally conceived) that only ran on Alpha (alongside other MS dev tools, such as for MIPS and PowerPC, that run only on the target platform) to run on more readily-available x86 machines. Essentially, it's the inverse of the WX86 emulator that Microsoft published for the RISC versions of Windows. This project was featured on <a href="https://virtuallyfun.com/2024/02/17/announcing-emuwow-beta-1-axp-preview1/">VirtuallyFun</a> twice in January and February of 2024, but development unfortunately stalled a little bit. A rewrite was embarked on that even enabled a version of EmuWOW compiled as a native 64-bit executable. Currently, Alpha AXP support is minimal, but several of the in-built Windows NT 3.51 applets for MIPS and i386 work, along with some simple test programs.<br>
+EmuWOW worked by implementing a custom PE loader. All of the EXE/DLL files required by the requested program are loaded into EmuWOW's address space (and inserted into the PEB's loader list; EmuWOW maintains a PEB for the emulated process), and a CPU emulator executes the instructions one-by-one. Similar to Microsoft's WOW and WOW64 emulation layers, most of the DLLs are identical to what would be used in a "real" environment for the desired CPU (i.e. if you're running the MIPS version of Solitaire, you're using the real Windows NT versions of CARDS.DLL and SHELL32.DLL), but the low-level DLLs exposing the Win32 API (i.e. the ones that perform system call thunks, generally) are special. In my case, they use an illegal instruction to trap into EmuWOW's thunk handler.<br>
+I intend to continue work on EmuWOW (potentially even using it for dynamic malware analysis where traditional debuggers fail?), but several blockers exist on its progress:<br>
+<ul>
+    <li>Crafting special thunks to handle every API function (there are a lot) is annoying and time consuming... there must be a better way</li>
+    <li>The CPU emulators need to be rewritten</li>
+    <li>I need to write a better debugger</li>
+</ul>
+</p>
+
+<p><a href="https://github.com/bhty/TOPGUN"><strong>Locutus</strong></a><br />
+Another emulator in a similar vein to EmuWOW that I worked on as a high-school senior, inspired by the <a href="https://www.patreon.com/posts/project-2ine-16513790">2ine project</a>. Unlike 2ine, however, it is designed not only to emulate the OS/2 API (like Wine does for Windows) but also emulate the 80386 CPU. This not only enables portability to other processor architectures, but also better emulates OS/2's selector management (selector management APIs available to user programs in OSes like Windows and Linux only get you so far) - a subject 2ine struggled with. 2ine also had problems running on operating systems other than Linux due to some OS/2 EXEs being linked to load only at address 10000H with no relocations, despite that address not being available on all OSes (or even always on Linux), which is solved by running the OS/2 process in an emulated address space. Currently, only trivial programs run, which is due both to imperfect OS/2 API emulation and imperfect CPU emulation. The CPU emulation components are due to be shared with EmuWOW.<br>
+I'm not intimately familiar with the OS/2 API, but all in all, it seems relatively simple and not too difficult to translate to Windows. DOSCALLS is fairly simple I/O stuff that maps fairly close on any remotely UNIX-adjacent system, the Presentation Manager windowing/event system maps almost 1:1 with USER, and while GPI and GDI have a somewhat different imaging model, I don't imagine it will be too difficult to do either.<br>
+<img src="locutus.png">
+</p>
+
+<p><strong>Unauthorized Windows/386</strong><br />
+I did some reverse-engineering work on Windows/386 version 2.xx that even ended up with me writing another <a href="https://virtuallyfun.com/2025/09/06/unauthorized-windows-386/">VirtuallyFun blog post</a> which went onto blow up on HackerNews along with a few other aggregators. I haven't yet swung back into this project, but getting the 386 debugger to work is a top priority. Exploring Windows 3.0 1.14 could also be very interesting.
+</p>
+
+<p><strong>Undocumented VWIN32</strong><br />
+This is the preliminary title for a research project I'm planning to do. The exact focus isn't yet clear to me, but VWIN32 sits at the intersection of the two topic areas that I'm considering:<br>
+<ul>
+    <li>Other Win32 extenders for DOS: DOSX32, Win32s, Phar Lap TNT, Borland 32RTM</li>
+    <li>A complete top-to-bottom deep dive / exploration of Windows 95</li>
+</ul>
+Some preliminary examination of Win32s found something very fascinating; Win32s uses far calls to:<br>
+<ul>
+    <li>For some services, call into the Win32s VxD. The services provided are documented as part of the DOSEMU project, with a service number in EAX and a parameter in EDX (often an address; Win32s does an odd scheme to offer null-pointer protection where Win32s apps live in a segment based at 4GB-64KB, so a 64KB offset is added to convert the address to linear)</li>
+    <li>Call into DOS (i.e. do an INT 21H; registers are set up the way they'd be for a protected-mode INT 21H)</li>
+    <li>Call into DPMI</li>
+</ul>
+Windows 95, on the other hand, is very different. Even as far back as build 58s (the earliest available build with Win32, at time of writing), it has shed its Win32s ancestry and mostly resembles the final version. To make a long story short, KERNEL32.DLL has a lot of logic in it (similar to KERNEL32 for Windows NT) but fundamentally it makes its "system calls" mostly by VxDCall to the VWIN32 VxD, which provides several Win32 services. GDI32.DLL and USER32.DLL are comparatively much thinner; while they have some logic within, they mostly just serve to thunk to their 16-bit counterparts (entry points located by way of the undocumented export GetProcAddress16), placing the service number in ECX and ultimately invoking FT_Thunk / QT_Thunk. It is likely that those two DLLs were largely auto-generated.<br>
+For those not in the know, DOSX32 was the runtime environment used by Microsoft C/C++ 7.0. It's documented in the manual that MSC7 requires a DPMI host that implements the undocumented MS-DOS API Extensions (just a specification for protected-mode INT 21H calls), and that Windows 3.0 enhanced mode's DOS boxes along with Qualitas's 386MAX memory manager provide such an environment (in fact, early versions of C7 bundled the Windows virtual machine manager as the DOS extender, before being replaced by 386MAX), but what is lesser known is that DOSX32 actually provides a Win32 command-line environment on DOS. MS32KRNL.DLL and the C7 compiler (CL3216; the 32-bit -> 16-bit cross compiler) itself are in the early PE format used by very early Windows NT beta versions. This was a clever trick by Microsoft to let them reuse code to let their compiler access extended memory on DOS by providing a minimal Win32 environment.<br>
+Microsoft accomplished the same trick with the next version of Microsoft C, version 8 (better known as Visual C++ 1.0), which is in fact a Win32 application, by using the Phar Lap TNT extender, which marries Phar Lap's earlier 386 extender (which already could link objects created by Microsoft's 32-bit compilers, though it couldn't execute PEs) with a Win32 environment (including multithreading, memory-mapped files, the works). Combined with Visual C++ 1.1 32-Bit Edition's (which bundles TNT Lite, just like the 16-bit VC does, so you can compile apps on Windows 3.1 / DOS and even run command-line Win32 apps) compiler, you can develop a lot of Win32 stuff just on DOS. It's possible that some of the Win32 code for TNT was adopted from DOSX32 or Win32s, though more examination would be required to look into this. What is known is that the debugger is shared between Win32s and TNT; both of them use a special 32-bit CodeView enhanced by Nu-Mega (of SoftICE fame) that makes heavy reference to Win32s. TNT is really quite a bit like the modern HX-DOS extender.
+</p>
+
+<p><a href="dpmihist.html"><strong>The History of DPMI</strong></a><br />
+While this subject has been discussed at some length online, I wanted to compile some of my own impressions on the early history of DPMI, as informed by a phone conversation I had with Ralph Lipe, the inventor of DPMI and one of the chief architects on Windows/386 2.x and its successors.
+</p>
+
+<h1><strong>Misc Projects</strong></h1>
+
+<p><a href="https://github.com/BHTY/Experiments/tree/main/VIDEO"><strong>VIDEO</strong></a><br />
+Some code I quickly wrote up to handle decoding of Microsoft Video 1-encoded AVI files. <strong>PLAYER.C</strong> contains a simple Win32 AVI player, though it has some serious bugs. Notably, it doesn't use any of the Microsoft APIs for decoding MSV1 (i.e. calling MSVFW32 to invoke the MSV1 driver) or walking the RIFF tree. <strong>MSV1.ASM</strong> contains an x86 (16-bit) assembly-optimized decoder for MSV1 videos. In combination with a DOS bitmap viewer, it should be possible to write a fast AVI player for 8086 machines with VGA graphics.
+</p>
+
+<p><strong>TED</strong><br />
+A simple DOS text editor that I'm writing. Once combined with the TUI windowing system I'm developing, it'll be awesome!<br>
+<img src="ted.png">
+</p>
+
+<p><strong>C4 DOS Extender</strong><br />
+To enable me to use Microsoft tools to develop more of my own MS-DOS software (including my games), I have started developing my own environment which provides a PE dynamic loader and flat memory model on top of DPMI. <br>
+<a href="https://github.com/bhty/dosxplod">Early prototypes</a> (very messy) were done with a PE loader bootstrapped from Watcom with the Causeway extender, but work has transitioned to <a href="https://github.com/BHTY/Experiments/tree/main/HELLDPMI">a new base</a> (a sample program of my own making!), which includes 32-bit code in assembly and C, all created using Microsoft tools, all united within an MZ executable. <br>
+One of the sub-projects within C4 (so named to contrast with Phar Lap TNT; the internal name "DOSXPLOD" used in many places is a similar play on words) is a 32-bit debugger. Right now, I'm planning to keep it simple (i.e. like a machine language monitor - no symbols, no expression parsing, nothing fancy) before stuffing it with features (including even a TUI interface). Not only will this debugger be useful for other 386 projects (including my emulator), large parts of the debugging engine can simply be lifted to help debug emulators for other processors (i.e. MIPS) for the next version of Windows.
+</p>
