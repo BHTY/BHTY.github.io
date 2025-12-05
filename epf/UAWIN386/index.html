@@ -6,3 +6,8 @@
 <p>To begin my work, I first had to convert the kernel of Windows/386 into a more modern executable format compatible with modern analysis tools, so I wrote my own converter program to accomplish this. After that, I could begin disassembling Windows/386 and figuring out how its code worked. Unlike later versions of Windows, the virtual device drivers that comprise Windows/386's 32-bit layer are statically linked into the kernel rather than loaded as separate files, so it was previously thought to be impossible to load custom code to run in 32-bit mode in Windows/386, but by writing my own program that hijacked the Windows/386 loader and patched key interrupt vectors, I was able to interrupt execution of Windows/386 and detour into my own code on command.</p>
 
 <p>This project taught me a great deal about reverse-engineering, which is one of my core work interests. Beyond simply sharpening my abilities of x86 assembly, and recognizing patterns to piece together inscrutable-looking disassemblies, I became more proficient in building tools, since I needed to build tools to convert between different executable formats to aid in my work, and became more adept with software archaeology, as I looked into clues from other versions of Windows to help piece together clues to how Windows/386 worked.</p>
+
+<p>Below you can see my Windows/386 debugger program inject its hooks into the Windows/386 loader program:</p>
+<img src="Loading.png"></a>
+<p>And then taking control after a divide exception and executing my code to print "W386DBG":</p>
+<img src="Action.png"></a>
